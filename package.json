@@ -6,12 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "seed": "node scripts/seed.mjs",
+    "seed:clean": "node scripts/seed.mjs --clean",
+    "create-admin": "node scripts/create-admin.mjs",
+    "typecheck": "tsc --noEmit",
+    "verify": "node scripts/verify-setup.mjs"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^13.4.6",
+    "lucide-react": "^1.49.0",
     "next": "16.3.7",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-hook-form": "^7.89.0",
+    "server-only": "^0.0.1",
+    "sonner": "^2.0.8",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
