@@ -29,6 +29,16 @@ function YoutubeGlyph({ className }: { className?: string }) {
   )
 }
 
+function DriveGlyph({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={className}>
+      <path d="M8.6 3 H15.4 L21.4 13.6 H14.6 Z" fill="currentColor" />
+      <path d="M8.1 3.9 L14.5 15 L11.1 21 L4.7 9.9 Z" fill="currentColor" opacity="0.72" />
+      <path d="M12.1 15.9 H22.4 L19 21.6 H8.7 Z" fill="currentColor" opacity="0.52" />
+    </svg>
+  )
+}
+
 /** One gallery item, whether it is an uploaded file or an external link. */
 type GalleryItem =
   | { source: 'upload'; id: string; media: ProjectMedia }
@@ -267,6 +277,18 @@ function Thumbnail({
     return <ExternalImage src={link.thumbnailUrl} alt={`${projectTitle} — linked photo`} />
   }
 
+  if (link.kind === 'drive' && link.thumbnailUrl) {
+    // No play overlay: Drive hands back the same preview endpoint for a photo
+    // and a video, so a play button here would be a lie half the time.
+    return (
+      <ExternalImage
+        src={link.thumbnailUrl}
+        alt={`${projectTitle} — Google Drive media`}
+        fallback={<PlaceholderTile glyph={<DriveGlyph className="size-7" />} label="Drive" />}
+      />
+    )
+  }
+
   if (link.kind === 'instagram') {
     return <PlaceholderTile glyph={<InstagramGlyph className="size-7" />} label="Instagram" />
   }
@@ -286,17 +308,26 @@ function ExternalImage({
   src,
   alt,
   contain,
+  fallback,
 }: {
   src: string
   alt: string
   contain?: boolean
+  /** Shown instead of a broken image when the host refuses the request — a
+   *  Drive file that is not shared publicly is the common case. */
+  fallback?: React.ReactNode
 }) {
+  const [failed, setFailed] = useState(false)
+
+  if (failed && fallback) return <>{fallback}</>
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
       alt={alt}
       loading="lazy"
+      onError={() => setFailed(true)}
       className={
         contain
           ? 'max-h-full max-w-full object-contain'
@@ -355,6 +386,14 @@ function SourceBadge({ item }: { item: GalleryItem }) {
       </Badge>
     )
   }
+  if (item.media.kind === 'drive') {
+    return (
+      <Badge>
+        <DriveGlyph className="size-3.5" />
+        Drive
+      </Badge>
+    )
+  }
   return null
 }
 
@@ -403,10 +442,15 @@ function LightboxContent({
 
   const link = item.media
 
-  if ((link.kind === 'youtube' || link.kind === 'instagram') && link.embedUrl) {
+  if (
+    (link.kind === 'youtube' || link.kind === 'instagram' || link.kind === 'drive') &&
+    link.embedUrl
+  ) {
     // Instagram is why this is an iframe rather than an image: Instagram does
     // not allow its media to be loaded by another site, so their own embed is
-    // the only way to actually show the post.
+    // the only way to actually show the post. Drive rides the same path for a
+    // different reason — its /preview player handles a photo and a video
+    // identically, so the lightbox does not need to know which it opened.
     return (
       <iframe
         key={link.id}
@@ -417,9 +461,13 @@ function LightboxContent({
         loading="lazy"
         className={cn(
           'border-0 bg-ink-900',
-          link.kind === 'instagram'
-            ? 'h-[min(88vh,760px)] w-[min(100%,420px)] rounded-[var(--radius-card)]'
-            : 'aspect-video w-full max-w-5xl',
+          link.kind === 'instagram' &&
+            'h-[min(88vh,760px)] w-[min(100%,420px)] rounded-[var(--radius-card)]',
+          // Taller than 16:9 on purpose: a Drive link is as often a portrait
+          // phone photo as a video, and the player letterboxes whichever it is.
+          link.kind === 'drive' &&
+            'h-[min(86vh,820px)] w-full max-w-5xl rounded-[var(--radius-card)]',
+          link.kind === 'youtube' && 'aspect-video w-full max-w-5xl',
         )}
       />
     )

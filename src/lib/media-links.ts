@@ -1,8 +1,8 @@
 /** External media links on a project.
  *
- *  The owner pastes a list of URLs — YouTube, Instagram, or a direct link to
- *  an image or video file — and these helpers work out what each one is so
- *  the gallery can show it rather than just linking to it.
+ *  The owner pastes a list of URLs — YouTube, Instagram, Google Drive, or a
+ *  direct link to an image or video file — and these helpers work out what
+ *  each one is so the gallery can show it rather than just linking to it.
  *
  *  Stored as a JSON array in a single text column. Parsing is forgiving in
  *  both directions: a value written before this feature existed, or hand-edited
@@ -10,7 +10,13 @@
  *  project page.
  */
 
-export type ExternalMediaKind = 'youtube' | 'instagram' | 'image' | 'video' | 'link'
+export type ExternalMediaKind =
+  | 'youtube'
+  | 'instagram'
+  | 'drive'
+  | 'image'
+  | 'video'
+  | 'link'
 
 export interface ExternalMedia {
   /** Stable key for React lists. */
@@ -96,6 +102,28 @@ function instagramCode(url: URL): string | null {
   return match ? match[2] : null
 }
 
+/** A single Drive FILE, from any of the shapes the share sheet and the address
+ *  bar produce: /file/d/<id>/view, ?id=<id> on /open and /uc, and the Docs-style
+ *  /d/<id>/ path.
+ *
+ *  Folder links (/drive/folders/<id>) are deliberately NOT matched. A folder is
+ *  not one picture, so there is nothing to put in a gallery tile; it falls
+ *  through to a plain link instead of rendering an embed that would show a file
+ *  browser inside the lightbox. */
+function driveFileId(url: URL): string | null {
+  const host = url.hostname.replace(/^www\./, '')
+  if (host !== 'drive.google.com' && host !== 'docs.google.com') return null
+
+  const path = /^\/(?:file\/)?d\/([^/?#]+)/.exec(url.pathname)
+  if (path) return path[1]
+
+  if (url.pathname === '/open' || url.pathname === '/uc') {
+    return url.searchParams.get('id')
+  }
+
+  return null
+}
+
 export function classifyLink(raw: string, index: number): ExternalMedia | null {
   let url: URL
   try {
@@ -133,6 +161,25 @@ export function classifyLink(raw: string, index: number): ExternalMedia | null {
       // derive — the post is shown through their own embed instead.
       embedUrl: `https://www.instagram.com/p/${ig}/embed`,
       label: 'View on Instagram',
+    }
+  }
+
+  const drive = driveFileId(url)
+  if (drive) {
+    return {
+      id,
+      kind: 'drive',
+      url: raw,
+      providerId: drive,
+      // Drive serves a preview image for photos AND a poster frame for videos
+      // at this endpoint, so one thumbnail covers both without knowing which
+      // the file is. It only resolves while the file is shared with "anyone
+      // with the link" — the gallery falls back to a tile when it does not.
+      thumbnailUrl: `https://drive.google.com/thumbnail?id=${drive}&sz=w1000`,
+      // /preview plays a video and renders an image, again without us having
+      // to know the type up front.
+      embedUrl: `https://drive.google.com/file/d/${drive}/preview`,
+      label: 'Open in Google Drive',
     }
   }
 

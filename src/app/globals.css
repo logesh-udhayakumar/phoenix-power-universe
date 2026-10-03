@@ -31,6 +31,13 @@
   --color-amber-accent-hover: #c4680f;
   --color-amber-soft: #fdf1e3;
 
+  /* The phoenix mark's gold. Two stops so the bird reads as metal rather than
+     one flat fill: the deeper tone carries the body, the lighter one catches
+     the crest. Both are chosen to hold contrast on the light header AND the
+     near-black footer, since one component serves both. */
+  --color-gold: #c8921c;
+  --color-gold-light: #e8bb4e;
+
   --color-success: #15803d;
   --color-danger: #b42318;
 

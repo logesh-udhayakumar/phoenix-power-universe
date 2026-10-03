@@ -23,7 +23,7 @@ export function SiteFooter({
     <footer className="mt-24 border-t border-line bg-ink-950 text-paper">
       <div className="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div className="sm:col-span-2 lg:col-span-1">
-          <PhoenixLogo markClassName="size-8 text-paper" textClassName="text-paper" />
+          <PhoenixLogo markClassName="size-8" textClassName="text-paper" />
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-soft">
             {siteConfig.description}
           </p>

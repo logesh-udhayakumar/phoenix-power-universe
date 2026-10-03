@@ -8,20 +8,22 @@ import { cn } from '@/lib/utils/cn'
  *  symmetric spikes above a head read as a CROWN, not as plumage, which is
  *  what the first version of this mark got wrong.
  *
- *  Inline SVG, not an image file: it inherits `currentColor`, so one
- *  component serves the light header and the dark footer with no second
- *  asset and no network request. The crest takes the brand amber, which is
- *  the only colour in the mark.
+ *  Inline SVG, not an image file: no second asset and no network request, and
+ *  the gold is a token rather than a baked-in hex, so the mark restyles from
+ *  one place. The bird is brand gold in both the light header and the dark
+ *  footer — it is the logo's own colour, not the surrounding text's, so it
+ *  deliberately does NOT follow `currentColor` the way the wordmark does.
  */
 export function PhoenixMark({
   className,
   accent = true,
 }: {
   className?: string
-  /** Tint the crest with the brand amber. Off for single-colour use. */
+  /** Catch the crest in the lighter gold. Off for a flat single-tone mark. */
   accent?: boolean
 }) {
-  const crest = accent ? 'var(--color-amber-accent)' : 'currentColor'
+  const gold = 'var(--color-gold)'
+  const crest = accent ? 'var(--color-gold-light)' : gold
 
   return (
     <svg
@@ -31,7 +33,7 @@ export function PhoenixMark({
       focusable="false"
       className={cn('size-7', className)}
     >
-      <g fill="currentColor">
+      <g fill={gold}>
         {/* Crest plumes, swept back like flame rather than a crown. */}
         <path
           d="M30.2 10.2 C27.6 6.4 24.4 3.8 20.4 2.4 C23.4 5.8 25.8 9.2 27.4 12.6 Z"

@@ -38,7 +38,7 @@ export function SiteHeader() {
       <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
         <Link href="/" aria-label={`${siteConfig.name} — home`}>
           <PhoenixLogo
-            markClassName="size-7 text-ink-950 md:size-8"
+            markClassName="size-7 md:size-8"
             textClassName="text-ink-950 md:text-[0.9375rem]"
           />
         </Link>

@@ -138,7 +138,7 @@ export function ProjectForm({
         label="Photo and video links"
         htmlFor="media_links"
         error={errors.media_links}
-        hint="Paste YouTube or Instagram links, or direct links to a photo or video. Separate them with commas or put each on its own line — they appear in the project gallery."
+        hint="Paste YouTube, Instagram or Google Drive links, or direct links to a photo or video. Separate them with commas or put each on its own line — they appear in the project gallery. A Drive file must be shared with 'Anyone with the link' to show up."
       >
         <Textarea
           id="media_links"
