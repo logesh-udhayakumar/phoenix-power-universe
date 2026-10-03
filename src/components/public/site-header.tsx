@@ -34,53 +34,59 @@ export function SiteHeader() {
     href === '/' ? pathname === '/' : pathname.startsWith(href)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur">
-      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
-        <Link href="/" aria-label={`${siteConfig.name} — home`}>
-          <PhoenixLogo
-            markClassName="size-7 md:size-8"
-            textClassName="text-ink-950 md:text-[0.9375rem]"
-          />
-        </Link>
-
-        <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
-          {mainNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive(item.href) ? 'page' : undefined}
-              className={cn(
-                'text-sm transition-colors hover:text-ink-950',
-                isActive(item.href)
-                  ? 'font-semibold text-ink-950'
-                  : 'text-slate-muted',
-                'emphasis' in item && item.emphasis && 'font-semibold uppercase tracking-wide',
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden md:block">
-          <Link
-            href="/contact"
-            className="inline-flex h-11 items-center rounded-[var(--radius-card)] bg-amber-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-amber-accent-hover"
-          >
-            Get a Quote
+    <header className="sticky top-0 z-50">
+      {/* The blurred bar is its own element. `backdrop-filter` makes an element
+          the containing block for `position: fixed` descendants, so with the blur
+          on <header> the overlay menu below sized itself to the 64px bar instead
+          of the viewport and clipped every link past the second one. */}
+      <div className="border-b border-line bg-paper/90 backdrop-blur">
+        <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
+          <Link href="/" aria-label={`${siteConfig.name} — home`}>
+            <PhoenixLogo
+              markClassName="size-7 md:size-8"
+              textClassName="text-ink-950 md:text-[0.9375rem]"
+            />
           </Link>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          className="-mr-2 inline-flex size-11 items-center justify-center text-ink-900 md:hidden"
-        >
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
+          <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
+            {mainNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                className={cn(
+                  'text-sm transition-colors hover:text-ink-950',
+                  isActive(item.href)
+                    ? 'font-semibold text-ink-950'
+                    : 'text-slate-muted',
+                  'emphasis' in item && item.emphasis && 'font-semibold uppercase tracking-wide',
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="hidden md:block">
+            <Link
+              href="/contact"
+              className="inline-flex h-11 items-center rounded-[var(--radius-card)] bg-amber-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-amber-accent-hover"
+            >
+              Get a Quote
+            </Link>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="-mr-2 inline-flex size-11 items-center justify-center text-ink-900 md:hidden"
+          >
+            {open ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
+        </div>
       </div>
 
       {open ? (
