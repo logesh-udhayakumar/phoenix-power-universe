@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { Spinner } from '@/components/ui/spinner'
 import { AlertCircle } from 'lucide-react'
 import { signIn, type LoginState } from '@/app/admin/login/actions'
 import { Field, Input } from '@/components/ui/input'
@@ -14,8 +15,9 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex h-11 w-full items-center justify-center rounded-[var(--radius-card)] bg-ink-950 text-sm font-semibold text-paper transition-colors hover:bg-ink-800 disabled:opacity-60"
+      className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-ink-950 text-sm font-semibold text-paper transition-colors hover:bg-ink-800 disabled:opacity-60"
     >
+      {pending ? <Spinner /> : null}
       {pending ? 'Signing in...' : 'Sign in'}
     </button>
   )

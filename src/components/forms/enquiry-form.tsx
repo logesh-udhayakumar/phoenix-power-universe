@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { Spinner } from '@/components/ui/spinner'
 import { CheckCircle2, AlertCircle, Send } from 'lucide-react'
 import { submitEnquiry, type EnquiryState } from '@/app/(public)/contact/actions'
 import { Field, Input, Select, Textarea } from '@/components/ui/input'
@@ -18,7 +19,7 @@ function SubmitButton() {
       className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-card)] bg-amber-accent px-7 text-sm font-semibold text-white transition-colors hover:bg-amber-accent-hover disabled:opacity-60 sm:w-auto"
     >
       {pending ? 'Sending...' : 'Send Enquiry'}
-      {pending ? null : <Send className="size-4" aria-hidden="true" />}
+      {pending ? <Spinner /> : <Send className="size-4" aria-hidden="true" />}
     </button>
   )
 }

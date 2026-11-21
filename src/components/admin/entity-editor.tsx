@@ -8,6 +8,8 @@ import { Field, Input, Select, Textarea } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { OrderArrows } from './order-arrows'
 import { ImageField } from './image-field'
+import { SubmitButton } from '@/components/ui/submit-button'
+import { Spinner } from '@/components/ui/spinner'
 import type { BucketName } from '@/lib/storage/provider'
 import type { OrderableTable } from '@/app/admin/actions'
 
@@ -216,13 +218,12 @@ export function EntityEditor({
                 </button>
                 <form action={deleteAction}>
                   <input type="hidden" name="id" value={row.id} />
-                  <button
-                    type="submit"
+                  <SubmitButton
                     aria-label={`Delete ${row.title}`}
                     className="inline-flex size-9 items-center justify-center rounded-[var(--radius-card)] text-danger hover:bg-danger/10"
                   >
                     <Trash2 className="size-4" />
-                  </button>
+                  </SubmitButton>
                 </form>
               </div>
             </li>
@@ -330,8 +331,9 @@ function SaveButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex h-11 items-center rounded-[var(--radius-card)] bg-ink-950 px-6 text-sm font-semibold text-paper hover:bg-ink-800 disabled:opacity-60"
+      className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-card)] bg-ink-950 px-6 text-sm font-semibold text-paper hover:bg-ink-800 disabled:opacity-60"
     >
+      {pending ? <Spinner /> : null}
       {pending ? 'Saving...' : 'Save'}
     </button>
   )

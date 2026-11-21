@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { SubmitButton } from '@/components/ui/submit-button'
 import {
   FolderKanban,
   Inbox,
@@ -98,13 +99,12 @@ export function AdminShell({
             Phoenix Power Admin
           </p>
           <form action={signOut}>
-            <button
-              type="submit"
+            <SubmitButton
               aria-label="Log out"
               className="inline-flex size-10 items-center justify-center text-slate-muted"
             >
               <LogOut className="size-5" />
-            </button>
+            </SubmitButton>
           </form>
         </header>
 
@@ -155,13 +155,13 @@ function SidebarFooter({ email }: { email: string }) {
         View website
       </a>
       <form action={signOut}>
-        <button
-          type="submit"
+        <SubmitButton
+          pendingText="Logging out…"
           className="flex w-full items-center gap-3 rounded-[var(--radius-card)] px-3 py-2.5 text-sm text-ink-700 hover:bg-paper-sunken"
         >
           <LogOut className="size-4 shrink-0" aria-hidden="true" />
           Log out
-        </button>
+        </SubmitButton>
       </form>
       <p className="truncate px-3 pt-2 text-xs text-slate-soft" title={email}>
         {email}

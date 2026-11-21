@@ -2,6 +2,7 @@ import { Mail, MessageCircle, Phone, Trash2 } from 'lucide-react'
 import { adminGetEnquiries } from '@/lib/admin-queries'
 import { deleteEnquiry, setEnquiryStatus } from '@/app/admin/actions'
 import { Badge } from '@/components/ui/badge'
+import { SubmitButton } from '@/components/ui/submit-button'
 import { formatDate } from '@/lib/utils/format'
 import { whatsappHref, telHref } from '@/config/site'
 
@@ -110,22 +111,21 @@ export default async function AdminEnquiriesPage() {
                   <form action={setEnquiryStatus}>
                     <input type="hidden" name="id" value={enquiry.id} />
                     <input type="hidden" name="status" value={next.value} />
-                    <button
-                      type="submit"
-                      className="inline-flex h-9 items-center rounded-[var(--radius-card)] border border-line-strong px-3 text-xs font-semibold hover:bg-paper-sunken"
+                    <SubmitButton
+                      pendingText="Updating…"
+                      className="inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-card)] border border-line-strong px-3 text-xs font-semibold hover:bg-paper-sunken"
                     >
                       {next.label}
-                    </button>
+                    </SubmitButton>
                   </form>
                   <form action={deleteEnquiry}>
                     <input type="hidden" name="id" value={enquiry.id} />
-                    <button
-                      type="submit"
+                    <SubmitButton
                       aria-label={`Delete enquiry from ${enquiry.name}`}
                       className="inline-flex size-9 items-center justify-center rounded-[var(--radius-card)] text-danger hover:bg-danger/10"
                     >
                       <Trash2 className="size-4" />
-                    </button>
+                    </SubmitButton>
                   </form>
                 </div>
               </li>

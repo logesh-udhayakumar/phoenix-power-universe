@@ -5,6 +5,7 @@ import { ProjectForm } from '@/components/admin/project-form'
 import { MediaManager } from '@/components/admin/media-manager'
 import { adminGetCategories, adminGetProject } from '@/lib/admin-queries'
 import { deleteProject } from '@/app/admin/actions'
+import { SubmitButton } from '@/components/ui/submit-button'
 
 export const dynamic = 'force-dynamic'
 
@@ -94,13 +95,13 @@ export default async function EditProjectPage({
         </p>
         <form action={deleteProject} className="mt-4">
           <input type="hidden" name="id" value={project.id} />
-          <button
-            type="submit"
+          <SubmitButton
+            pendingText="Deleting…"
             className="inline-flex h-10 items-center gap-2 rounded-[var(--radius-card)] bg-danger px-4 text-sm font-semibold text-white hover:opacity-90"
           >
             <Trash2 className="size-4" aria-hidden="true" />
             Delete project
-          </button>
+          </SubmitButton>
         </form>
       </section>
     </div>

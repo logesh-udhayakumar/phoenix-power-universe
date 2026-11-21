@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
+import { Suspense } from 'react'
+import { NavigationProgress } from '@/components/navigation-progress'
 import { siteConfig } from '@/config/site'
 import './globals.css'
 
@@ -40,7 +42,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={inter.variable} data-scroll-behavior="smooth">
-      <body>{children}</body>
+      <body>
+        {/* useSearchParams needs a Suspense boundary to keep pages static-safe. */}
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
+        {children}
+      </body>
     </html>
   )
 }

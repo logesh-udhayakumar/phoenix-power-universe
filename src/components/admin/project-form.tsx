@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { Spinner } from '@/components/ui/spinner'
 import { AlertCircle, CheckCircle2, ChevronDown } from 'lucide-react'
 import { saveProject, type ActionState } from '@/app/admin/actions'
 import { Field, Input, Select, Textarea } from '@/components/ui/input'
@@ -240,8 +241,9 @@ function SaveButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex h-11 items-center justify-center rounded-[var(--radius-card)] bg-ink-950 px-6 text-sm font-semibold text-paper transition-colors hover:bg-ink-800 disabled:opacity-60"
+      className="inline-flex h-11 items-center justify-center gap-2 rounded-[var(--radius-card)] bg-ink-950 px-6 text-sm font-semibold text-paper transition-colors hover:bg-ink-800 disabled:opacity-60"
     >
+      {pending ? <Spinner /> : null}
       {pending ? 'Saving...' : 'Save project'}
     </button>
   )

@@ -5,6 +5,7 @@ import { adminGetProjects } from '@/lib/admin-queries'
 import { setProjectStatus } from '@/app/admin/actions'
 import { OrderArrows } from '@/components/admin/order-arrows'
 import { Badge } from '@/components/ui/badge'
+import { SubmitButton } from '@/components/ui/submit-button'
 import { formatDate } from '@/lib/utils/format'
 
 export const dynamic = 'force-dynamic'
@@ -106,12 +107,12 @@ export default async function AdminProjectsPage() {
                     name="status"
                     value={project.status === 'published' ? 'draft' : 'published'}
                   />
-                  <button
-                    type="submit"
-                    className="inline-flex h-9 items-center rounded-[var(--radius-card)] border border-line-strong px-3 text-xs font-semibold hover:bg-paper-sunken"
+                  <SubmitButton
+                    pendingText={project.status === 'published' ? 'Unpublishing…' : 'Publishing…'}
+                    className="inline-flex h-9 items-center gap-1.5 rounded-[var(--radius-card)] border border-line-strong px-3 text-xs font-semibold hover:bg-paper-sunken"
                   >
                     {project.status === 'published' ? 'Unpublish' : 'Publish'}
-                  </button>
+                  </SubmitButton>
                 </form>
                 <Link
                   href={`/admin/projects/${project.id}/edit`}

@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowUp } from 'lucide-react'
 import { moveEntity, type OrderableTable } from '@/app/admin/actions'
 import { cn } from '@/lib/utils/cn'
+import { SubmitButton } from '@/components/ui/submit-button'
 
 /** Up / down controls that set the order items appear in on the website.
  *
@@ -54,14 +55,13 @@ function ArrowButton({
   children: React.ReactNode
 }) {
   return (
-    <button
-      type="submit"
+    <SubmitButton
       disabled={disabled}
       title={label}
       aria-label={label}
       className="inline-flex size-8 items-center justify-center rounded-[var(--radius-card)] border border-line-strong text-ink-700 transition-colors hover:bg-paper-sunken disabled:opacity-30 disabled:hover:bg-transparent"
     >
       {children}
-    </button>
+    </SubmitButton>
   )
 }

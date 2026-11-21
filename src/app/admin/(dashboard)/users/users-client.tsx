@@ -4,6 +4,8 @@ import { useActionState, useRef, useState } from 'react'
 import { UserPlus, Trash2, ShieldCheck, Crown, Eye, EyeOff } from 'lucide-react'
 import type { AdminUserRow } from '@/types/db'
 import type { ActionState } from '@/app/admin/actions'
+import { SubmitButton } from '@/components/ui/submit-button'
+import { Spinner } from '@/components/ui/spinner'
 
 const IDLE: ActionState = { status: 'idle' }
 
@@ -126,7 +128,7 @@ export function UsersClient({ users, callerId, addAction, deleteAction }: Props)
             disabled={pending}
             className="inline-flex items-center gap-2 rounded-[var(--radius-card)] bg-ink-950 px-4 py-2 text-sm font-medium text-paper transition-opacity hover:opacity-80 disabled:opacity-50"
           >
-            <UserPlus className="size-4" aria-hidden="true" />
+            {pending ? <Spinner /> : <UserPlus className="size-4" aria-hidden="true" />}
             {pending ? 'Creating user…' : 'Add user'}
           </button>
         </form>
@@ -173,12 +175,12 @@ export function UsersClient({ users, callerId, addAction, deleteAction }: Props)
                         <span className="text-xs text-ink-700">Remove?</span>
                         <form action={deleteAction}>
                           <input type="hidden" name="id" value={user.id} />
-                          <button
-                            type="submit"
-                            className="text-xs font-medium text-red-600 hover:underline"
+                          <SubmitButton
+                            pendingText="Removing…"
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-red-600 hover:underline"
                           >
                             Yes, remove
-                          </button>
+                          </SubmitButton>
                         </form>
                         <button
                           type="button"
