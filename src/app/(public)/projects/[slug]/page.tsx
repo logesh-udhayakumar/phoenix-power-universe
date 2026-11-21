@@ -1,7 +1,7 @@
-import type { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,32 +11,32 @@ import {
   Images,
   MapPin,
   Tag,
-} from 'lucide-react'
-import { ProjectCard } from '@/components/projects/project-card'
-import { ProjectGallery } from '@/components/projects/project-gallery'
-import { Section, SectionHeading } from '@/components/public/section'
-import { getProjectBySlug, getPublishedProjects } from '@/lib/queries'
-import { completionYear, placeLine } from '@/lib/utils/format'
-import { externalMediaFor } from '@/lib/media-links'
-import { siteConfig } from '@/config/site'
+} from "lucide-react";
+import { ProjectCard } from "@/components/projects/project-card";
+import { ProjectGallery } from "@/components/projects/project-gallery";
+import { Section, SectionHeading } from "@/components/public/section";
+import { getProjectBySlug, getPublishedProjects } from "@/lib/queries";
+import { completionYear, placeLine } from "@/lib/utils/format";
+import { externalMediaFor } from "@/lib/media-links";
+import { siteConfig } from "@/config/site";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params
-  const project = await getProjectBySlug(slug)
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
 
-  if (!project) return { title: 'Project not found' }
+  if (!project) return { title: "Project not found" };
 
-  const place = placeLine(project.city, project.state)
-  const title = `${project.title}${place ? ` | ${place}` : ''}`
+  const place = placeLine(project.city, project.state);
+  const title = `${project.title}${place ? ` | ${place}` : ""}`;
   const description =
     project.description?.slice(0, 155) ??
-    `${project.category?.name ?? 'Project'} by ${siteConfig.name}${place ? ` in ${place}` : ''}.`
+    `${project.category?.name ?? "Project"} by ${siteConfig.name}${place ? ` in ${place}` : ""}.`;
 
   return {
     title,
@@ -45,43 +45,45 @@ export async function generateMetadata({
     openGraph: {
       title: `${siteConfig.name} | ${title}`,
       description,
-      type: 'article',
+      type: "article",
       url: `${siteConfig.url}/projects/${project.slug}`,
-      images: project.cover_image_url ? [{ url: project.cover_image_url }] : undefined,
+      images: project.cover_image_url
+        ? [{ url: project.cover_image_url }]
+        : undefined,
     },
-  }
+  };
 }
 
 export default async function ProjectDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params
-  const project = await getProjectBySlug(slug)
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
 
-  if (!project) notFound()
+  if (!project) notFound();
 
-  const place = placeLine(project.location, project.city, project.state)
-  const year = completionYear(project.completion_date)
-  const links = externalMediaFor(project.media_links)
+  const place = placeLine(project.location, project.city, project.state);
+  const year = completionYear(project.completion_date);
+  const links = externalMediaFor(project.media_links);
   const photoCount =
-    project.media.filter((m) => m.media_type === 'image').length +
-    links.filter((l) => l.kind === 'image').length
+    project.media.filter((m) => m.media_type === "image").length +
+    links.filter((l) => l.kind === "image").length;
   const videoCount =
-    project.media.filter((m) => m.media_type === 'video').length +
-    links.filter((l) => l.kind === 'youtube' || l.kind === 'video').length
+    project.media.filter((m) => m.media_type === "video").length +
+    links.filter((l) => l.kind === "youtube" || l.kind === "video").length;
 
   const related = (await getPublishedProjects({ limit: 4 }))
     .filter((p) => p.id !== project.id)
-    .slice(0, 3)
+    .slice(0, 3);
 
   const facts = [
-    { icon: Tag, label: 'Category', value: project.category?.name },
-    { icon: Building2, label: 'Project type', value: project.project_type },
-    { icon: MapPin, label: 'Location', value: place || undefined },
-    { icon: CalendarCheck, label: 'Completed', value: year ?? undefined },
-  ].filter((f) => Boolean(f.value))
+    { icon: Tag, label: "Category", value: project.category?.name },
+    { icon: Building2, label: "Project type", value: project.project_type },
+    { icon: MapPin, label: "Location", value: place || undefined },
+    { icon: CalendarCheck, label: "Completed", value: year ?? undefined },
+  ].filter((f) => Boolean(f.value));
 
   return (
     <article>
@@ -114,41 +116,71 @@ export default async function ProjectDetailPage({
             Back to Our Work
           </Link>
 
-          <div className="mt-8 max-w-3xl">
-            {project.category ? (
-              <p className="eyebrow">{project.category.name}</p>
-            ) : null}
-            <h1 className="mt-2 text-3xl font-bold leading-[1.1] md:text-5xl">
-              {project.title}
-            </h1>
+          <div className="mt-8 flex items-center justify-between gap-10">
+            <div className="max-w-3xl">
+              {project.category ? (
+                <p className="eyebrow">{project.category.name}</p>
+              ) : null}
+              <h1 className="mt-2 text-3xl font-bold leading-[1.1] md:text-5xl">
+                {project.title}
+              </h1>
 
-            <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/80">
-              {place ? (
+              <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/80">
+                {place ? (
+                  <li className="inline-flex items-center gap-1.5">
+                    <MapPin
+                      className="size-4 text-amber-accent"
+                      aria-hidden="true"
+                    />
+                    {place}
+                  </li>
+                ) : null}
                 <li className="inline-flex items-center gap-1.5">
-                  <MapPin className="size-4 text-amber-accent" aria-hidden="true" />
-                  {place}
+                  <Building2
+                    className="size-4 text-amber-accent"
+                    aria-hidden="true"
+                  />
+                  {project.project_type}
                 </li>
-              ) : null}
-              <li className="inline-flex items-center gap-1.5">
-                <Building2 className="size-4 text-amber-accent" aria-hidden="true" />
-                {project.project_type}
-              </li>
-              {year ? (
-                <li className="inline-flex items-center gap-1.5">
-                  <CalendarCheck className="size-4 text-amber-accent" aria-hidden="true" />
-                  Completed {year}
-                </li>
-              ) : null}
-              {photoCount > 0 ? (
-                <li className="inline-flex items-center gap-1.5">
-                  <Images className="size-4 text-amber-accent" aria-hidden="true" />
-                  {photoCount} {photoCount === 1 ? 'photo' : 'photos'}
-                  {videoCount > 0
-                    ? ` · ${videoCount} ${videoCount === 1 ? 'video' : 'videos'}`
-                    : ''}
-                </li>
-              ) : null}
-            </ul>
+                {year ? (
+                  <li className="inline-flex items-center gap-1.5">
+                    <CalendarCheck
+                      className="size-4 text-amber-accent"
+                      aria-hidden="true"
+                    />
+                    Completed {year}
+                  </li>
+                ) : null}
+                {photoCount > 0 ? (
+                  <li className="inline-flex items-center gap-1.5">
+                    <Images
+                      className="size-4 text-amber-accent"
+                      aria-hidden="true"
+                    />
+                    {photoCount} {photoCount === 1 ? "photo" : "photos"}
+                    {videoCount > 0
+                      ? ` · ${videoCount} ${videoCount === 1 ? "video" : "videos"}`
+                      : ""}
+                  </li>
+                ) : null}
+              </ul>
+            </div>
+
+            {project.cover_image_url ? (
+              <div className="relative hidden aspect-[4/3] w-60 shrink-0 overflow-hidden rounded-[var(--radius-card)] shadow-2xl ring-1 ring-paper/15 md:block lg:w-72">
+                {/* Landscape box so it never outgrows the title block (keeps the
+                    banner height) and doesn't crop-zoom wide photos. sizes is
+                    generous so retina / cropped renders still get a sharp file. */}
+                <Image
+                  src={project.cover_image_url}
+                  alt={project.title}
+                  fill
+                  sizes="(min-width: 1024px) 576px, 480px"
+                  quality={90}
+                  className="object-cover"
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       </header>
@@ -163,7 +195,9 @@ export default async function ProjectDetailPage({
                   <fact.icon className="size-3.5" aria-hidden="true" />
                   {fact.label}
                 </p>
-                <p className="mt-1 text-sm font-semibold text-ink-950">{fact.value}</p>
+                <p className="mt-1 text-sm font-semibold text-ink-950">
+                  {fact.value}
+                </p>
               </div>
             ))}
           </div>
@@ -227,7 +261,8 @@ export default async function ProjectDetailPage({
           <div className="rounded-[var(--radius-card)] border border-line bg-paper-raised p-6 shadow-[var(--shadow-card)]">
             <h2 className="text-base font-semibold">Need something similar?</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-muted">
-              Tell us about your site and we will come back with a scope and a quote.
+              Tell us about your site and we will come back with a scope and a
+              quote.
             </p>
             <Link
               href="/contact"
@@ -257,5 +292,5 @@ export default async function ProjectDetailPage({
         </Section>
       ) : null}
     </article>
-  )
+  );
 }
